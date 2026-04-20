@@ -44,6 +44,25 @@
             </tbody>
             </table>
             </div>
+
+            <!-- Algorithm Selector Section-->
+             
+             <div class="algorithm-section">
+                <h2>Algorithm</h2>
+                <input type="radio" id ="FCFS" name="algorithm" value="FCFS">
+                <label for= "FCFS">FCFS</label>
+                <input type="radio" id ="SJF" name ="algorithm" value="SJF">
+                <label for="SJF">SJF</label>
+                <input type="radio" id ="round-robin" name="algorithm" value="round-robin">
+                <label for="round-robin">Round robin</label>
+                <input type="radio" id ="Priority" name="algorithm" value="Priority">
+                <label for="Priority">Priority</label>
+                <div class="quantum-input">
+                    <label for="quantum">Quantum</label>
+                    <input type="number" id = "quantum" placeholder="2"/>
+                </div>
+                <button id="run-btn">Run</button>
+             </div>
          </div>
     </body>
 </html>
