@@ -24,6 +24,7 @@
             max-width: 1100px;
             margin: 0 auto;
             padding: 2rem;
+            gap: 2rem;
         }
 
         .header {
@@ -67,6 +68,37 @@
             border-radius: 12px;
             padding: 1.5rem;
         }
+        
+        .algorithm-section input[type="radio"] {
+            display: none;
+        }
+
+        .algorithm-section label {
+            display: block;
+            padding: 10px 14px;
+            background-color: #2C2C2E;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 500;
+            color: white;
+        }
+        .algorithm-section input[type="radio"]:checked + label {
+            background-color: #C9F22C;
+            color: #000000;
+        }
+        
+        .algo-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+        .quantum-input label {
+            background: none !important;
+            padding: 0 !important;
+            font-size: 12px;
+            color: #888;
+            display: inline !important;
+        }
 
         .table-section,
         .gantt-chart,
@@ -98,6 +130,26 @@
             color: 888;
         }
 
+        #process-add-btn {
+            background-color: #C9F22C;
+            border: none;
+            padding: 12px;
+            border-radius: 50px;
+            font-size: 14px;
+            font-weight: 14px;
+            width: 100%;
+        }
+
+        #run-btn {
+            background-color: #C9F22C;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 50px;
+            font-size: 14px;
+            font-weight: 700;
+            width:100%;
+        }
+
     </style>
 
 </head>
@@ -112,23 +164,6 @@
             </div>
         </div>
 
-        <!-- Table Queue Section-->
-        <div class="table-section">
-            <h2>Process queue</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Name of process</th>
-                        <th>Arrival time</th>
-                        <th>Burst time</th>
-                        <th>Priority</th>
-                    </tr>
-                </thead>
-                <tbody id="process-tbody">
-                </tbody>
-            </table>
-        </div>
-
         <!-- Top Panels-->
         <div class="top-panels">
 
@@ -136,6 +171,7 @@
 
         <div class="algorithm-section">
             <h2>Algorithm</h2>
+            <div class="algo-grid">
             <input type="radio" id="FCFS" name="algorithm" value="FCFS">
             <label for="FCFS">FCFS</label>
             <input type="radio" id="SJF" name="algorithm" value="SJF">
@@ -144,6 +180,7 @@
             <label for="round-robin">Round robin</label>
             <input type="radio" id="Priority" name="algorithm" value="Priority">
             <label for="Priority">Priority</label>
+            </div>
             <div class="quantum-input">
                 <label for="quantum">Quantum</label>
                 <input type="number" id="quantum" placeholder="2" />
@@ -173,6 +210,24 @@
                 <button id="process-add-btn">Click to add process</button>
             </div>
         </div>
+
+             <!-- Table Queue Section-->
+        <div class="table-section">
+            <h2>Process queue</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name of process</th>
+                        <th>Arrival time</th>
+                        <th>Burst time</th>
+                        <th>Priority</th>
+                    </tr>
+                </thead>
+                <tbody id="process-tbody">
+                </tbody>
+            </table>
+        </div>
+
 
         <!-- Gantt Chart Section-->
         <div class="gantt-chart">
