@@ -1,99 +1,150 @@
 <!DOCTYPE html>
 <html>
-    <head>
 
-    </head>
-    <body>
+<head>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: black;
+            color: white;
+            font-family: 'Inter', sans-serif;
+            height: 100vh;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        h1 {
+            display: column;
+            align-items: left;
+            gap: 16px;
+            padding: 16px 32px;
+            background-color: #1C1C1E;
+            border-bottom: 5px solid rgb(185, 57, 57);
+        }
+
+        .process-section {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            padding: 16px 32 px;
+            background-color: #1C1C1E;
+            border-radius: 10px;
+        }
+    </style>
+
+</head>
+
+<body>
+    <div class="container">
         <!-- Header-->
         <h1>CPU Scheduling Simulator</h1>
 
-        <!-- Process Section-->
-         <div class="process-section">
-            <h2> Add a process</h2>
-            <div class="field"></div>
-                <label>Name of process</label>
-                <input type="text" id="process-name" placeholder="P1"/>
-            </div>
-            <div class = "field">    
-                <label>Arrival time</label>
-                <input type="number" id = "arrival-time" placeholder="0"/>
-            </div>
-            <div class="field">
-                <label>Burst time</label>
-                <input type="number"id="burst-time" placeholder="1"/>
-            </div>
-            <div class="field">
-                <label>Priority</label>
-                <input type="number"id="priority" placeholder="1"/>
-            </div>
-            <button id ="process-add-btn">Click to add process</button>
-
-            <!-- Table Queue Section-->
-             <div class="table-section">
-                <h2>Process queue</h2>
+        <!-- Table Queue Section-->
+        <div class="table-section">
+            <h2>Process queue</h2>
             <table>
                 <thead>
-                <tr>
-                    <th>Name of process</th>
-                    <th>Arrival time</th>
-                    <th>Burst time</th>
-                    <th>Priority</th>
-                </tr>
+                    <tr>
+                        <th>Name of process</th>
+                        <th>Arrival time</th>
+                        <th>Burst time</th>
+                        <th>Priority</th>
+                    </tr>
                 </thead>
                 <tbody id="process-tbody">
-            </tbody>
+                </tbody>
             </table>
+        </div>
+
+        <!-- Top Panels-->
+        <div class="top-panels">
+
+             <!-- Algorithm Selector Section-->
+
+        <div class="algorithm-section">
+            <h2>Algorithm</h2>
+            <input type="radio" id="FCFS" name="algorithm" value="FCFS">
+            <label for="FCFS">FCFS</label>
+            <input type="radio" id="SJF" name="algorithm" value="SJF">
+            <label for="SJF">SJF</label>
+            <input type="radio" id="round-robin" name="algorithm" value="round-robin">
+            <label for="round-robin">Round robin</label>
+            <input type="radio" id="Priority" name="algorithm" value="Priority">
+            <label for="Priority">Priority</label>
+            <div class="quantum-input">
+                <label for="quantum">Quantum</label>
+                <input type="number" id="quantum" placeholder="2" />
             </div>
+            <button id="run-btn">Run</button>
+        </div>
 
-            <!-- Algorithm Selector Section-->
-             
-             <div class="algorithm-section">
-                <h2>Algorithm</h2>
-                <input type="radio" id ="FCFS" name="algorithm" value="FCFS">
-                <label for= "FCFS">FCFS</label>
-                <input type="radio" id ="SJF" name ="algorithm" value="SJF">
-                <label for="SJF">SJF</label>
-                <input type="radio" id ="round-robin" name="algorithm" value="round-robin">
-                <label for="round-robin">Round robin</label>
-                <input type="radio" id ="Priority" name="algorithm" value="Priority">
-                <label for="Priority">Priority</label>
-                <div class="quantum-input">
-                    <label for="quantum">Quantum</label>
-                    <input type="number" id = "quantum" placeholder="2"/>
+            <!-- Process Section-->
+            <div class="process-section">
+                <h2> Add a process</h2>
+                <div class="field">
+                    <label for="process-name">Name of process</label>
+                    <input type="text" id="process-name" placeholder="P1" />
                 </div>
-                <button id="run-btn">Run</button>
-             </div>
-
-            <!-- Gantt Chart Section-->
-              <div class="gantt-chart">
-                <h2>Gannt chart</h2>
-                <div class="final-gantt" id="final-gantt">
-
+                <div class="field">
+                    <label for="arrival-time">Arrival time</label>
+                    <input type="number" id="arrival-time" placeholder="0" />
                 </div>
-              </div>
+                <div class="field">
+                    <label for="burst-time">Burst time</label>
+                    <input type="number" id="burst-time" placeholder="1" />
+                </div>
+                <div class="field">
+                    <label for="priority">Priority</label>
+                    <input type="number" id="priority" placeholder="1" />
+                </div>
+                <button id="process-add-btn">Click to add process</button>
+            </div>
+        </div>
 
-            <!-- Process Result Section-->
-             <div class="process-result">
-                <h2>Process results</h2>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Process</th>
-                            <th>Burst</th>
-                            <th>Arrival</th>
-                            <th>Start</th>
-                            <th>Finish</th>
-                            <th>Waiting</th>
-                            <th>Turnaround</th>
-                        </tr>
-                    </thead>
-                    <tbody id="process-result-tbody">
+        <!-- Gantt Chart Section-->
+        <div class="gantt-chart">
+            <h2>Gannt chart</h2>
+            <div class="final-gantt" id="final-gantt">
 
-                    </tbody>
-                </table>
-             </div>
-            
+            </div>
+        </div>
 
-         </div>
-    </body>
+        <!-- Process Result Section-->
+        <div class="process-result">
+            <h2>Process results</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Process</th>
+                        <th>Burst</th>
+                        <th>Arrival</th>
+                        <th>Start</th>
+                        <th>Finish</th>
+                        <th>Waiting</th>
+                        <th>Turnaround</th>
+                    </tr>
+                </thead>
+                <tbody id="process-result-tbody">
+
+                </tbody>
+            </table>
+        </div>
+
+
+    </div>
+</body>
+
 </html>
