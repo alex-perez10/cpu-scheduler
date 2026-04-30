@@ -291,7 +291,41 @@
     clearInputs();
     });
 
-    
+    // Updates queue table
+    function updateQueueTable() {
+        let tbody = document.getElementById('process-tbody');
+        tbody.innerHTML = '';
+        processes.forEach(function(p, index) {
+            let row = ` <tr>
+                <td><span style ="width:8px;height:8px;border-radius:50%;background:${p.color};display:inline-block;margin-right:6px;"></span>${p.name}</td>
+                <td>${p.arrival}</td>
+                <td>${p.burst}</td>
+                <td>${p.priority}</td>
+                <td><button onClick="deleteProcess(${index})" style="background:none;border:none;color:#FF375F;font-size:14px;">x</button></td>
+            </tr>`;
+            tbody.innerHTML += row;
+        });
+    }
+
+    // Deletes process
+    function deleteProcess(index) {
+        processes.splice(index,1);
+        updateQueueTable();
+        updateProcessCount();
+    }
+
+    // Updates process count in header
+    function updateProcessCount() {
+        document.getElementById('process-count').textContent = processes.length + ' processes loaded';
+    }
+
+    // Clears inputs after adding 
+    function clearInputs() {
+        document.getElementById('process-name').value = '';
+        document.getElementById('arrival-time').value = '';
+        document.getElementById('burst-time').value = '';
+        document.getElementById('priority').value = '';
+    }
     </script>
 </body>
 
