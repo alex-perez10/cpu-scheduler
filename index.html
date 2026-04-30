@@ -260,6 +260,39 @@
 
 
     </div>
+    <script>
+    // Stores processes
+    let processes = [];  
+    let processColors = ['#FF375F', '#30D5C8','#C9F22C','#BF5AF2'];
+    function getColor(index) {
+        if(index < processColors.length) {
+            return processColors[index];
+        }
+        let hue = Math.floor(Math.random() * 360);
+        return `hsl(${hue}, 80%, 60%)`;
+    }
+
+    // Add process 
+    document.getElementById('process-add-btn').addEventListener('click', function() {
+    let name = document.getElementById('process-name').value;
+    let arrival = parseInt(document.getElementById('arrival-time').value);
+    let burst = parseInt(document.getElementById('burst-time').value);
+    let priority = parseInt(document.getElementById('priority').value);
+
+    if(!name || isNaN(arrival) || isNaN(burst) || isNaN(priority)) {
+        alert('Please fill in all fields');
+        return;
+    }
+    let color = getColor(processes.length);
+    processes.push({ name, arrival, burst, priority, color});
+
+    updateQueueTable();
+    updateProcessCount();
+    clearInputs();
+    });
+
+    
+    </script>
 </body>
 
 </html>
