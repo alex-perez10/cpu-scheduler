@@ -31,7 +31,7 @@
             display: flex;
             align-items: center;
             background-color: #1C1C1E;
-            padding: 1rem 1.5 rem;
+            padding: 1rem 1.5rem;
             border-radius: 12px;
         }
 
@@ -44,7 +44,7 @@
 
         .header p {
             font-size: 13px;
-            color: 888;
+            color: #888;
             margin-top: 2px;
         }
 
@@ -113,6 +113,28 @@
             gap: 1rem;
         }
 
+        .gantt-bars {
+            display: flex;
+            width: 100%;
+        }
+
+        .gantt-ticks {
+            display: flex;
+            width: 100%;
+            margin-top: 4px;
+        }
+
+        .gantt-bars {
+            height : 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 600;
+            min-width:40px;
+        }
+
         input {
             padding: 10px 20px;
             background-color: #2C2C2E;
@@ -130,7 +152,7 @@
 
         .field label {
             font-size: 12px;
-            color: 888;
+            color: #888;
         }
 
         #process-add-btn {
@@ -361,7 +383,7 @@
             }
 
             createGantt(result.gantt, algorithm.value);
-            showResults(result.processes);
+            createResults(result.processes);
         });
 
         // FCFS algorithm
@@ -462,7 +484,7 @@
                 remaining.splice(remaining.indexOf(p), 1);
                 p.start = time;
                 p.finish = time + p.burst;
-                p.waiting = p.start = p.arrival;
+                p.waiting = p.start - p.arrival;
                 p.turnaround = p.finish - p.arrival;
                 gantt.push({ name: p.name, start: time, end: p.finish, color: p.color });
                 time = p.finish;
