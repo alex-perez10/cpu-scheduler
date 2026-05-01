@@ -326,6 +326,58 @@
         document.getElementById('burst-time').value = '';
         document.getElementById('priority').value = '';
     }
+
+    // Runs the simulation
+    document.getElementById('run-btn').addEventListener('click', function() {
+        if (processes.length == 0) {
+            alert('Please add at least one process');
+            return;
+        }
+
+        let algorithm = document.querySelector('input[name="algorithm"]:checked');
+        if(!algorithm) {
+
+            alert('Please select an algorithm');
+            return;
+        }
+        
+        let result;
+        switch(algorithm.value) {
+            case 'FCFS':
+                result = fcfs([...processes]);
+                break;
+            case 'SJF':
+                result = sjf([...processes]);
+                break;
+            case 'round-robin':
+                let quantum = parseInt(document.getElementById('quantum').value) || 2;
+                result = roundRobin([...processes], quantum);
+                break;
+            case 'Priority':
+                result = priority([...processes]);
+                break;
+        }
+
+        createGantt(result.gantt, algorithm.value);
+        showResults(result.processes);
+    });
+
+    // FCFS algorithm
+    function fcfs(processArray) {
+        processArray.sort((a,b) => a.arrival - b.arrival);
+        let time = 0;
+        let gantt = [];
+        processArray.forEach(function(p) {
+            if (time < p.arrival) time = p.arrival;
+            p.start = time;
+            p.finish = time + p.burst;
+            p.waiting = p.start - p.arrival;
+            p.turnaround = p.finish- p.arrival;
+            gantt.push({ name: p.name, start: time, end: p.finish, color: p.color });
+            time = p.finish;
+        });
+        return{ processes: procs,gantt}
+    }
     </script>
 </body>
 
