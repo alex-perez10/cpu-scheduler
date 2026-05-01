@@ -409,6 +409,41 @@
             return { processes: completed, gantt };
         }
 
+        // Round Robin algorithm
+        function roundRobin(processArray, quantum) {
+            let time = 0;
+            let gantt = [];
+            let queue = [];
+            let remaining = processArray.map(p => ({ ...p, remainingBurst: p.burst }));
+            remaining.sort((a,b) => a.arrival - b.arrival);
+            let completed = [];
+            let i = 0;
+
+            queue.push(remaining[i++]);
+
+            while (queue.length > 0) {
+                let p = queue.shift();
+                let executionTime = Math.min(p.remainingBurst, quantum);
+                gantt.push({ name: p.name, start: time, end: time + executionTime, color: p.color });
+                time += executionTime;
+                p.remainingBurst -= executionTime;
+
+                while (i < remaining.length && remaining[i].arrival <= time) {
+                    queue.push(remaining[i++]);
+                }
+
+                if (p.remainingBurst > 0) {
+                    queue.push(p);
+                }else {
+                    p.finish = time;
+                    p.waiting = p.finish - p.arrival - p.burst;
+                    p.turnaround = p.finish - p.arrival;
+                    completed.push(p);
+                }
+            }
+            return {processes: completed, gantt };
+        }
+
     </script>
 </body>
 
