@@ -135,6 +135,30 @@
             min-width:40px;
         }
 
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+            table-layout: fixed;
+        }
+
+        th,td {
+            width: 100%;
+            padding: 10px;
+            text-align: left;
+            color: #AEAEB2;
+            border-bottom: 0.5px solid #2C2C2E;
+        }
+
+        th {
+            color: #AEAEB2;
+            font-weight: 500;
+        }
+
+        td {
+            color: white;
+        }
+
         input {
             padding: 10px 20px;
             background-color: #2C2C2E;
@@ -245,6 +269,7 @@
                         <th>Arrival time</th>
                         <th>Burst time</th>
                         <th>Priority</th>
+                        <th style="width: 40px;"></th>
                     </tr>
                 </thead>
                 <tbody id="process-tbody">
@@ -325,7 +350,7 @@
                 <td>${p.arrival}</td>
                 <td>${p.burst}</td>
                 <td>${p.priority}</td>
-                <td><button onClick="deleteProcess(${index})" style="background:none;border:none;color:#FF375F;font-size:14px;">x</button></td>
+                <td><button onClick="deleteProcess(${index})" style="background:none;border:none;color:white;font-size:30px;cursor:pointer;">&#128465</button></td>
             </tr>`;
                 tbody.innerHTML += row;
             });
