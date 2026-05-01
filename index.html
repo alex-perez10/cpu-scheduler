@@ -444,7 +444,77 @@
             return {processes: completed, gantt };
         }
 
+        // Priority Algorithm 
+        function priority(processArray) {
+            let time = 0;
+            let gantt = [];
+            let completed = [];
+            let remaining = [...processArray];
+
+            while (remaining.length > 0) {
+                let available = remaining.filter(p => p.arrival <= time);
+                if(available.length === 0) {
+                    time = remaining[0].arrival;
+                    available = [remaining[0]];
+                }
+                available.sort((a,b) => a.priority - b.priority);
+                let p = available[0];
+                remaining.splice(remaining.indexOf(p), 1);
+                p.start = time;
+                p.finish = time + p.burst;
+                p.waiting = p.start = p.arrival;
+                p.turnaround = p.finish - p.arrival;
+                gantt.push({ name: p.name, start: time, end: p.finish, color: p.color });
+                time = p.finish;
+                completed.push(p);
+        }
+        return { processes: completed, gantt };
+    }
+
+    // Creates Gantt chart
+    function createGantt(gantt, algorithmName) {
+        let container = document.getElementById('final-gantt');
+        let totalTime = gantt[gantt.length - 1].end;
+
+        let barsHTML = '<div class="gantt-bars">';
+        let ticksHTML = '<div class="gantt-ticks">';
+
+        gantt.forEach(function(g) {
+            let width = ((g.end - g.start) / totalTime) * 100;
+            barsHTML += `<div class="gantt-bar" style="width:${width}%;background:${g.color};">${g.name}</div>`;
+            ticksHTML += `<div style="width:${width}%">${g.start}</div>`;
+        });
+
+        ticksHTML += `<span>${totalTime}</span>`;
+        barsHTML += '</div>';
+        ticksHTML += '</div>';
+
+        document.querySelector('.gantt-chart h2').textContent = 'Gantt chart - ' + algorithmName;
+        container.innerHTML = barsHTML + ticksHTML;
+    }
+    // Creates results table 
+    function createResults(processArray) {
+        let tbody = document.getElementById('process-result-tbody');
+        let totalWaiting = 0;
+        let totalTurnaround = 0;
+        tbody.innerHTML ='';
+
+        processArray.forEach(function(p) {
+            totalWaiting += p.waiting;
+            totalTurnaround += p.turnaround;
+            tbody.innerHTML += `<tr>
+                <td><span style="width:8px;height:8px;border-radius:50%;background:${p.color};display:inline-block;margin-right:6px;"></span>${p.name}</td>
+                <td>${p.arrival}</td>
+                <td>${p.burst}</td>
+                <td>${p.start}</td>
+                <td>${p.finish}</td>
+                <td>${p.waiting}</td>
+                <td>${p.turnaround}</td>
+                </tr>`;
+        });
+    }
+
     </script>
 </body>
 
-</html>
+</html> 
