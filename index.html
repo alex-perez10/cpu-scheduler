@@ -44,7 +44,7 @@
 
         .header p {
             font-size: 13px;
-            color:888;
+            color: 888;
             margin-top: 2px;
         }
 
@@ -68,7 +68,7 @@
             border-radius: 12px;
             padding: 1.5rem;
         }
-        
+
         .algorithm-section input[type="radio"] {
             display: none;
         }
@@ -82,16 +82,18 @@
             font-weight: 500;
             color: white;
         }
-        .algorithm-section input[type="radio"]:checked + label {
+
+        .algorithm-section input[type="radio"]:checked+label {
             background-color: #C9F22C;
             color: #000000;
         }
-        
+
         .algo-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 8px;
         }
+
         .quantum-input label {
             background: none !important;
             padding: 0 !important;
@@ -105,7 +107,7 @@
         .process-result {
             background-color: #1C1C1E;
             border-radius: 12px;
-            padding:  1.5rem;
+            padding: 1.5rem;
             display: flex;
             flex-direction: column;
             gap: 1rem;
@@ -120,10 +122,11 @@
             font-size: 14px;
             width: 100%;
         }
-         input::placeholder {
-                color: #C9F22C;
-                opacity: 0.6;
-            } 
+
+        input::placeholder {
+            color: #C9F22C;
+            opacity: 0.6;
+        }
 
         .field label {
             font-size: 12px;
@@ -147,9 +150,8 @@
             border-radius: 50px;
             font-size: 14px;
             font-weight: 700;
-            width:100%;
+            width: 100%;
         }
-
     </style>
 
 </head>
@@ -160,33 +162,33 @@
         <div class="header">
             <div>
                 <h1>CPU Scheduling Simulator</h1>
-                <p id = "process-count"> 0 processes loaded</p>
+                <p id="process-count"> 0 processes loaded</p>
             </div>
         </div>
 
         <!-- Top Panels-->
         <div class="top-panels">
 
-             <!-- Algorithm Selector Section-->
+            <!-- Algorithm Selector Section-->
 
-        <div class="algorithm-section">
-            <h2>Algorithm</h2>
-            <div class="algo-grid">
-            <input type="radio" id="FCFS" name="algorithm" value="FCFS">
-            <label for="FCFS">FCFS</label>
-            <input type="radio" id="SJF" name="algorithm" value="SJF">
-            <label for="SJF">SJF</label>
-            <input type="radio" id="round-robin" name="algorithm" value="round-robin">
-            <label for="round-robin">Round robin</label>
-            <input type="radio" id="Priority" name="algorithm" value="Priority">
-            <label for="Priority">Priority</label>
+            <div class="algorithm-section">
+                <h2>Algorithm</h2>
+                <div class="algo-grid">
+                    <input type="radio" id="FCFS" name="algorithm" value="FCFS">
+                    <label for="FCFS">FCFS</label>
+                    <input type="radio" id="SJF" name="algorithm" value="SJF">
+                    <label for="SJF">SJF</label>
+                    <input type="radio" id="round-robin" name="algorithm" value="round-robin">
+                    <label for="round-robin">Round robin</label>
+                    <input type="radio" id="Priority" name="algorithm" value="Priority">
+                    <label for="Priority">Priority</label>
+                </div>
+                <div class="quantum-input">
+                    <label for="quantum">Quantum</label>
+                    <input type="number" id="quantum" placeholder="2" />
+                </div>
+                <button id="run-btn">Run</button>
             </div>
-            <div class="quantum-input">
-                <label for="quantum">Quantum</label>
-                <input type="number" id="quantum" placeholder="2" />
-            </div>
-            <button id="run-btn">Run</button>
-        </div>
 
             <!-- Process Section-->
             <div class="process-section">
@@ -211,7 +213,7 @@
             </div>
         </div>
 
-             <!-- Table Queue Section-->
+        <!-- Table Queue Section-->
         <div class="table-section">
             <h2>Process queue</h2>
             <table>
@@ -261,123 +263,152 @@
 
     </div>
     <script>
-    // Stores processes
-    let processes = [];  
-    let processColors = ['#FF375F', '#30D5C8','#C9F22C','#BF5AF2'];
-    function getColor(index) {
-        if(index < processColors.length) {
-            return processColors[index];
+        // Stores processes
+        let processes = [];
+        let processColors = ['#FF375F', '#30D5C8', '#C9F22C', '#BF5AF2'];
+        function getColor(index) {
+            if (index < processColors.length) {
+                return processColors[index];
+            }
+            let hue = Math.floor(Math.random() * 360);
+            return `hsl(${hue}, 80%, 60%)`;
         }
-        let hue = Math.floor(Math.random() * 360);
-        return `hsl(${hue}, 80%, 60%)`;
-    }
 
-    // Add process 
-    document.getElementById('process-add-btn').addEventListener('click', function() {
-    let name = document.getElementById('process-name').value;
-    let arrival = parseInt(document.getElementById('arrival-time').value);
-    let burst = parseInt(document.getElementById('burst-time').value);
-    let priority = parseInt(document.getElementById('priority').value);
+        // Add process 
+        document.getElementById('process-add-btn').addEventListener('click', function () {
+            let name = document.getElementById('process-name').value;
+            let arrival = parseInt(document.getElementById('arrival-time').value);
+            let burst = parseInt(document.getElementById('burst-time').value);
+            let priority = parseInt(document.getElementById('priority').value);
 
-    if(!name || isNaN(arrival) || isNaN(burst) || isNaN(priority)) {
-        alert('Please fill in all fields');
-        return;
-    }
-    let color = getColor(processes.length);
-    processes.push({ name, arrival, burst, priority, color});
+            if (!name || isNaN(arrival) || isNaN(burst) || isNaN(priority)) {
+                alert('Please fill in all fields');
+                return;
+            }
+            let color = getColor(processes.length);
+            processes.push({ name, arrival, burst, priority, color });
 
-    updateQueueTable();
-    updateProcessCount();
-    clearInputs();
-    });
+            updateQueueTable();
+            updateProcessCount();
+            clearInputs();
+        });
 
-    // Updates queue table
-    function updateQueueTable() {
-        let tbody = document.getElementById('process-tbody');
-        tbody.innerHTML = '';
-        processes.forEach(function(p, index) {
-            let row = ` <tr>
+        // Updates queue table
+        function updateQueueTable() {
+            let tbody = document.getElementById('process-tbody');
+            tbody.innerHTML = '';
+            processes.forEach(function (p, index) {
+                let row = ` <tr>
                 <td><span style ="width:8px;height:8px;border-radius:50%;background:${p.color};display:inline-block;margin-right:6px;"></span>${p.name}</td>
                 <td>${p.arrival}</td>
                 <td>${p.burst}</td>
                 <td>${p.priority}</td>
                 <td><button onClick="deleteProcess(${index})" style="background:none;border:none;color:#FF375F;font-size:14px;">x</button></td>
             </tr>`;
-            tbody.innerHTML += row;
+                tbody.innerHTML += row;
+            });
+        }
+
+        // Deletes process
+        function deleteProcess(index) {
+            processes.splice(index, 1);
+            updateQueueTable();
+            updateProcessCount();
+        }
+
+        // Updates process count in header
+        function updateProcessCount() {
+            document.getElementById('process-count').textContent = processes.length + ' processes loaded';
+        }
+
+        // Clears inputs after adding 
+        function clearInputs() {
+            document.getElementById('process-name').value = '';
+            document.getElementById('arrival-time').value = '';
+            document.getElementById('burst-time').value = '';
+            document.getElementById('priority').value = '';
+        }
+
+        // Runs the simulation
+        document.getElementById('run-btn').addEventListener('click', function () {
+            if (processes.length == 0) {
+                alert('Please add at least one process');
+                return;
+            }
+
+            let algorithm = document.querySelector('input[name="algorithm"]:checked');
+            if (!algorithm) {
+
+                alert('Please select an algorithm');
+                return;
+            }
+
+            let result;
+            switch (algorithm.value) {
+                case 'FCFS':
+                    result = fcfs([...processes]);
+                    break;
+                case 'SJF':
+                    result = sjf([...processes]);
+                    break;
+                case 'round-robin':
+                    let quantum = parseInt(document.getElementById('quantum').value) || 2;
+                    result = roundRobin([...processes], quantum);
+                    break;
+                case 'Priority':
+                    result = priority([...processes]);
+                    break;
+            }
+
+            createGantt(result.gantt, algorithm.value);
+            showResults(result.processes);
         });
-    }
 
-    // Deletes process
-    function deleteProcess(index) {
-        processes.splice(index,1);
-        updateQueueTable();
-        updateProcessCount();
-    }
-
-    // Updates process count in header
-    function updateProcessCount() {
-        document.getElementById('process-count').textContent = processes.length + ' processes loaded';
-    }
-
-    // Clears inputs after adding 
-    function clearInputs() {
-        document.getElementById('process-name').value = '';
-        document.getElementById('arrival-time').value = '';
-        document.getElementById('burst-time').value = '';
-        document.getElementById('priority').value = '';
-    }
-
-    // Runs the simulation
-    document.getElementById('run-btn').addEventListener('click', function() {
-        if (processes.length == 0) {
-            alert('Please add at least one process');
-            return;
+        // FCFS algorithm
+        function fcfs(processArray) {
+            processArray.sort((a, b) => a.arrival - b.arrival);
+            let time = 0;
+            let gantt = [];
+            processArray.forEach(function (p) {
+                if (time < p.arrival) time = p.arrival;
+                p.start = time;
+                p.finish = time + p.burst;
+                p.waiting = p.start - p.arrival;
+                p.turnaround = p.finish - p.arrival;
+                gantt.push({ name: p.name, start: time, end: p.finish, color: p.color });
+                time = p.finish;
+            });
+            return { processes: processArray, gantt };
         }
 
-        let algorithm = document.querySelector('input[name="algorithm"]:checked');
-        if(!algorithm) {
+        // SJF Algorithm
+        function sjf(processArray) {
+            let time = 0;
+            let gantt = [];
+            let completed = [];
+            let remaining = [...processArray];
 
-            alert('Please select an algorithm');
-            return;
+            while (remaining.length > 0) {
+                let available = remaining.filter(p => p.arrival <= time);
+                if (available.length == 0) {
+                    time = remaining[0].arrival;
+                    available = [remaining[0]];
+                }
+
+                available.sort((a, b) => a.burst - b.burst);
+                let p = available[0];
+                remaining.splice(remaining.indexOf(p), 1);
+                p.start = time;
+                p.finish = time + p.burst;
+                p.waiting = p.start - p.arrival;
+                p.turnaround = p.finish - p.arrival;
+                gantt.push({ name: p.name, start: time, end: p.finish, color: p.color });
+                time = p.finish;
+                completed.push(p);
+            }
+            return { processes: completed, gantt };
         }
-        
-        let result;
-        switch(algorithm.value) {
-            case 'FCFS':
-                result = fcfs([...processes]);
-                break;
-            case 'SJF':
-                result = sjf([...processes]);
-                break;
-            case 'round-robin':
-                let quantum = parseInt(document.getElementById('quantum').value) || 2;
-                result = roundRobin([...processes], quantum);
-                break;
-            case 'Priority':
-                result = priority([...processes]);
-                break;
-        }
 
-        createGantt(result.gantt, algorithm.value);
-        showResults(result.processes);
-    });
-
-    // FCFS algorithm
-    function fcfs(processArray) {
-        processArray.sort((a,b) => a.arrival - b.arrival);
-        let time = 0;
-        let gantt = [];
-        processArray.forEach(function(p) {
-            if (time < p.arrival) time = p.arrival;
-            p.start = time;
-            p.finish = time + p.burst;
-            p.waiting = p.start - p.arrival;
-            p.turnaround = p.finish- p.arrival;
-            gantt.push({ name: p.name, start: time, end: p.finish, color: p.color });
-            time = p.finish;
-        });
-        return{ processes: procs,gantt}
-    }
     </script>
 </body>
 
