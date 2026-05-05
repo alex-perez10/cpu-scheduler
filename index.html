@@ -14,13 +14,11 @@
             background-color: black;
             color: white;
             font-family: 'Inter', sans-serif;
-            height: 100vh;
         }
 
         .container {
             display: flex;
             flex-direction: column;
-            height: 100vh;
             max-width: 1100px;
             margin: 0 auto;
             padding: 2rem;
@@ -30,13 +28,16 @@
         .header {
             display: flex;
             align-items: center;
+            justify-content: center;
             background-color: #1C1C1E;
             padding: 1rem 1.5rem;
             border-radius: 12px;
+            border: 0.5px solid #3A3A3A;
         }
+        
 
         .header h1 {
-            font-size: 20px;
+            font-size: 35px;
             font-weight: 700;
             color: white;
 
@@ -45,7 +46,7 @@
         .header p {
             font-size: 13px;
             color: #AEAEB2;
-            margin-top: 2px;
+            margin-top: 10px;
         }
 
         .process-section {
@@ -55,6 +56,7 @@
             padding: 16px 32px;
             background-color: #1C1C1E;
             border-radius: 10px;
+            border: 0.5px solid #3A3A3A;
         }
 
         .top-panels {
@@ -67,6 +69,7 @@
             background-color: #1C1C1E;
             border-radius: 12px;
             padding: 1.5rem;
+            border: 0.5px solid #3A3A3A;
         }
 
         .algorithm-section input[type="radio"] {
@@ -93,6 +96,13 @@
             grid-template-columns: 1fr 1fr;
             gap: 8px;
         }
+        
+          .quantum-input {
+            display: none;
+            align-items: center;
+            gap: 10px;
+            margin-top: 8px;
+        }
 
         .quantum-input label {
             background: none !important;
@@ -111,6 +121,7 @@
             display: flex;
             flex-direction: column;
             gap: 1rem;
+            border: 0.5px solid #3A3A3A;
         }
 
         .gantt-bars {
@@ -125,14 +136,20 @@
         }
 
         .gantt-bars {
-            height : 40px;
+            display: flex;
+            width: 100;
+            gap: 2px;
+        }
+        .gantt-bar {
+            height : 48px;
             border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 12px;
+            font-size: 15px;
             font-weight: 600;
             min-width:40px;
+            color: #000;
         }
 
         table {
@@ -168,6 +185,11 @@
             font-size: 14px;
             width: 100%;
         }
+        input[type="number"]::-webkit-inner-spin-button,
+        input[type="number"]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
 
         input::placeholder {
             color: #C9F22C;
@@ -197,6 +219,7 @@
             font-size: 14px;
             font-weight: 700;
             width: 100%;
+            margin-top: 50px;
         }
     </style>
 
@@ -208,7 +231,7 @@
         <div class="header">
             <div>
                 <h1>CPU Scheduling Simulator</h1>
-                <p id="process-count"> 0 processes loaded</p>
+                <p>Choose an algorithm, add a process, and hit run to get started</p>   
             </div>
         </div>
 
@@ -230,10 +253,12 @@
                     <label for="Priority">Priority</label>
                 </div>
                 <div class="quantum-input">
+                    <div class="field">
                     <label for="quantum">Quantum</label>
                     <input type="number" id="quantum" placeholder="2" />
+                    </div>
                 </div>
-                <button id="run-btn">Run</button>
+                <button id="run-btn">&#x25B6 Run</button>
             </div>
 
             <!-- Process Section-->
@@ -255,13 +280,14 @@
                     <label for="priority">Priority</label>
                     <input type="number" id="priority" placeholder="1" />
                 </div>
-                <button id="process-add-btn">Click to add process</button>
+                <button id="process-add-btn">+ Click to add process</button>
             </div>
         </div>
 
         <!-- Table Queue Section-->
         <div class="table-section">
             <h2>Process queue</h2>
+            <p id="process-count"> 0 processes loaded</p>
             <table>
                 <thead>
                     <tr>
@@ -280,7 +306,7 @@
 
         <!-- Gantt Chart Section-->
         <div class="gantt-chart">
-            <h2>Gannt chart</h2>
+            <h2>Gantt chart</h2>
             <div class="final-gantt" id="final-gantt">
 
             </div>
@@ -293,8 +319,8 @@
                 <thead>
                     <tr>
                         <th>Process</th>
-                        <th>Burst</th>
                         <th>Arrival</th>
+                        <th>Burst</th>
                         <th>Start</th>
                         <th>Finish</th>
                         <th>Waiting</th>
@@ -461,15 +487,32 @@
             let time = 0;
             let gantt = [];
             let queue = [];
-            let remaining = processArray.map(p => ({ ...p, remainingBurst: p.burst }));
+            let remaining = processArray.map(p => ({ ...p, remainingBurst: p.burst, start: null }));
             remaining.sort((a,b) => a.arrival - b.arrival);
             let completed = [];
             let i = 0;
 
+            if(remaining.length > 0 && time < remaining[0].arrival) {
+                time = remaining[0].arrival;
+            }
+
+            while(i < remaining.length && remaining[i].arrival <= time){
             queue.push(remaining[i++]);
 
-            while (queue.length > 0) {
+            }
+            while (queue.length > 0 || i < remaining.length) {
+
+                if (queue.length == 0) {
+                    time = remaining[i].arrival;
+                    queue.push(remaining[i++]);
+                }
+
                 let p = queue.shift();
+
+                if (p.start == null) {
+                    p.start = time;
+                }
+
                 let executionTime = Math.min(p.remainingBurst, quantum);
                 gantt.push({ name: p.name, start: time, end: time + executionTime, color: p.color });
                 time += executionTime;
@@ -481,13 +524,15 @@
 
                 if (p.remainingBurst > 0) {
                     queue.push(p);
-                }else {
+                } else {
                     p.finish = time;
                     p.waiting = p.finish - p.arrival - p.burst;
                     p.turnaround = p.finish - p.arrival;
                     completed.push(p);
                 }
             }
+            completed.sort((a,b) => a.arrival - b.arrival);
+
             return {processes: completed, gantt };
         }
 
@@ -528,13 +573,13 @@
 
         if (gantt[0].start > 0) {
             let idleWidth = (gantt[0].start / totalTime) * 100;
-            barsHTML += `<div class="gantt-bar" style="width:${idleWidth}%;background:#3A3A3A;">idle</div>`;
+            barsHTML += `<div class="gantt-bar" style="width:${idleWidth}%;background:#3A3A3A;color:white">idle</div>`;
             ticksHTML += `<div style="width:${idleWidth}%;font-size:11px;color:#888;">0</div>`;
         }
 
         gantt.forEach(function(g) {
             let width = ((g.end - g.start) / totalTime) * 100;
-            barsHTML += `<div class="gantt-bar" style="width:${width}%;background:${g.color};color:#000;">${g.name}</div>`;
+            barsHTML += `<div class="gantt-bar" style="width:${width}%;background:${g.color};color:#1A1A1A;">${g.name}</div>`;
             ticksHTML += `<div style="width:${width}%;font-size:11px;color:#888;">${g.start}</div>`;
         });
 
@@ -566,6 +611,18 @@
                 </tr>`;
         });
     }
+
+    // Show quantum input only for Round Robin
+    document.querySelectorAll('input[name="algorithm"]').forEach(function(radio) {
+        radio.addEventListener('change', function() {
+            let quantumField = document.querySelector('.quantum-input');
+            if(this.value == 'round-robin') {
+                quantumField.style.display = 'flex';
+            }else {
+                quantumField.style.display = 'none';
+            }
+        });
+    });
 
     </script>
 </body>
