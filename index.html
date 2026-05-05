@@ -124,11 +124,6 @@
             border: 0.5px solid #3A3A3A;
         }
 
-        .gantt-bars {
-            display: flex;
-            width: 100%;
-        }
-
         .gantt-ticks {
             display: flex;
             width: 100%;
@@ -137,7 +132,7 @@
 
         .gantt-bars {
             display: flex;
-            width: 100;
+            width: 100%;
             gap: 2px;
         }
         .gantt-bar {
@@ -207,7 +202,7 @@
             padding: 12px;
             border-radius: 50px;
             font-size: 14px;
-            font-weight: 14px;
+            font-weight: 700;
             width: 100%;
         }
 
@@ -425,7 +420,11 @@
                     result = sjf([...processes]);
                     break;
                 case 'round-robin':
-                    let quantum = parseInt(document.getElementById('quantum').value) || 2;
+                    let quantum = parseInt(document.getElementById('quantum').value);
+                    if (isNaN(quantum) || quantum <= 0) {
+                        alert('Quantum can not be negative. Please enter a valid quantum value');
+                        return;
+                    }
                     result = roundRobin([...processes], quantum);
                     break;
                 case 'Priority':
@@ -460,6 +459,7 @@
             let gantt = [];
             let completed = [];
             let remaining = [...processArray];
+            remaining.sort((a,b) => a.arrival - b.arrival);
 
             while (remaining.length > 0) {
                 let available = remaining.filter(p => p.arrival <= time);
@@ -542,6 +542,7 @@
             let gantt = [];
             let completed = [];
             let remaining = [...processArray];
+            remaining.sort((a,b) => a.arrival - b.arrival);
 
             while (remaining.length > 0) {
                 let available = remaining.filter(p => p.arrival <= time);
