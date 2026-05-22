@@ -1,6 +1,10 @@
 # CPU Scheduling Simulator
 A web-based CPU scheduling simulator that visualizes how operating system scheduling algorithms manage processes. The simulator allows users to enter process details and compare scheduling behavior through a Gantt chart and performance metrics.
 
+## Live Demo
+
+[View the live CPU Scheduling Simulator](https://alex-perez10.github.io/cpu-scheduler/)
+
 ## Screenshot
 
 ![CPU Scheduling Simulator showing SJF scheduling results](cpu-scheduler-demo.png)
